@@ -44,8 +44,7 @@ public class TestUtilities {
 		python.setWorkingDirectory(gitResource.getLocation());
 		python.setInheritIO();
 		python.executeScript("collatz.py", "100000").waitFor();
-		python.setPipeIO();
-		assertEquals("Hello, world!", python.executeScript("-c", "\"from __future__ import print_function; print('Hello, world!')\"").waitAndGetString());
+		python.executeScript("-c", "\"from __future__ import print_function; print('Hello, world!')\"").waitFor();
 	}
 	
 }
