@@ -61,9 +61,22 @@ public class Python extends CommandLineExecutable {
 		return executeScript(scriptFile, argList);
 	}
 	
+	public ExecutableResult executeScript(String scriptFile, String... args) throws IOException {
+		List<String> argList = new ArrayList<>();
+		for (String arg : args) {
+			argList.add(arg);
+		}
+		return executeScript(scriptFile, argList);
+	}
+	
 	public ExecutableResult executeScript(File scriptFile, List<String> args) throws IOException {
+		return executeScript(scriptFile.getAbsolutePath(), args);
+	}
+	
+	public ExecutableResult executeScript(String scriptFile, List<String> args) throws IOException {
+
 		List<String> allArgs = new ArrayList<>();
-		allArgs.add(scriptFile.getAbsolutePath());
+		allArgs.add(scriptFile);
 		allArgs.addAll(args);
 		
 		return executeWithArgs(allArgs);

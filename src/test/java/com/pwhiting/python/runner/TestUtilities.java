@@ -1,5 +1,6 @@
 package com.pwhiting.python.runner;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -11,16 +12,20 @@ import org.junit.Test;
 
 public class TestUtilities {
 
-	private VirtualEnv venv;
 	private Python python;
 	private GitResource gitResource;
 	
 	@Before
 	public void setUp() {
-		venv = new VirtualEnv(new File("C:\\Users\\phwhitin\\workspaces\\Python\\environments\\whatever")); 
-		python = new Python(new File("C:\\Users\\phwhitin\\AppData\\Local\\Programs\\Python\\Python36-32\\python.exe")); 
+		File pythonWin = new File("C:\\Users\\phwhitin\\AppData\\Local\\Programs\\Python\\Python36-32\\python.exe");
+		File pythonUnix = new File("/usr/bin/python");
 		
-		File gitLocation = new File("C:\\Users\\phwhitin\\git\\python-work");
+		python = new Python(pythonWin.exists() ? pythonWin : pythonUnix); 
+		
+		File tempDir = new File(System.getProperty("java.io.tmpdir"));
+		System.out.println(tempDir);
+		
+		File gitLocation = new File(tempDir, "library-testing/Python-Work");
 		String url = "https://github.com/Himself12794/Python-Work.git";
 		
 		gitResource = new GitResource(gitLocation, url, "master", null);
@@ -33,21 +38,14 @@ public class TestUtilities {
 	}
 	
 	@Test
-	public void testVirtualEnv() {
-		assertNotNull(venv.getVersion());
-		venv.setInheritIO();
-		venv.installModule("requests");
-		venv.getInstalledComponents();
-	}
-	
-	@Test
-	public void testPython() {
+	public void testPython() throws IOException, InterruptedException {
+		System.out.println(python.getVersion());
 		assertNotNull(python.getVersion());
-	}
-	
-	@Test
-	public void testAll() {
-		
+		python.setWorkingDirectory(gitResource.getLocation());
+		python.setInheritIO();
+		python.executeScript("collatz.py", "100000").waitFor();
+		python.setPipeIO();
+		assertEquals("Hello, world!", python.executeScript("-c", "\"print('Hello, world!')\"").waitAndGetString());
 	}
 	
 }
