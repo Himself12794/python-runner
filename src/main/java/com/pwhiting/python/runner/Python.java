@@ -17,6 +17,7 @@ public class Python extends CommandLineExecutable {
 	private File pathToExecutable;
 	private File workingDirectory;
 	private VirtualEnv venv;
+	private List<String> pythonPath = new ArrayList<>();
 		
 	public Python(VirtualEnv venv) {
 		this.venv = venv;
@@ -24,6 +25,15 @@ public class Python extends CommandLineExecutable {
 	
 	public Python(File pathToExecutable) {
 		this.pathToExecutable = pathToExecutable;
+	}
+	
+	/**
+	 * Returns the values to be added to the PYTHONPATH environmental variable. Add/remove paths to this for execution.
+	 * 
+	 * @return
+	 */
+	public List<String> getPythonPath() {
+		return pythonPath;
 	}
 	
 	public void setWorkingDirectory(File workingDir) {
@@ -97,6 +107,17 @@ public class Python extends CommandLineExecutable {
 		if (venv != null) {
 			venv.configureEnvironment(env);
 		}
+		
+		if (!pythonPath.isEmpty()) {
+			
+			String path = env.getOrDefault("PYTHONPATH", "");
+			StringBuilder builder = new StringBuilder();
+			builder.append(path);
+			pythonPath.forEach(p -> builder.append(File.pathSeparatorChar).append(path));
+			env.put("PYTHONPATH", path);
+			
+		}
+		
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.pwhiting.python.runner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,29 @@ public class VirtualEnv extends CommandLineExecutable {
 		}
 	}
 	
+	public void installModules(String...modules) {
+		
+		List<String> arguments = new ArrayList<>();
+		arguments.add("install");
+		arguments.add("-U");
+		for (String module : modules) {
+			arguments.add(module);
+		}
+		
+		try {
+			ExecutableResult result = executeWithArgs(arguments);
+			result.waitFor();
+		} catch (InterruptedException | IOException ioe) {
+			
+		}
+	}
+	
 	public void installModule(String module) {
 		installModule(module, null, true);
+	}
+	
+	public void installModule(String module, boolean update) {
+		installModule(module, null, update);
 	}
 	
 	public void installModule(String module, String version, boolean update) {

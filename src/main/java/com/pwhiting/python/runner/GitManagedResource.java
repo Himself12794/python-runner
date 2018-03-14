@@ -61,9 +61,10 @@ public interface GitManagedResource {
 			}
 			fetch.setRefSpecs(new RefSpec("refs/heads/*:refs/remotes/origin/*")).call();
 			ObjectId refId = git.getRepository().resolve("refs/remotes/origin/" + branch);
-			git.checkout().setName(refId != null ? refId.name() : git.getRepository().resolve(branch).getName()).setForce(true).call();
+			String refName = refId != null ? refId.name() : git.getRepository().resolve(branch).getName();
+			git.checkout().setName(refName).setForce(true).call();
 			
-			LOGGER.info("Python plugin is at commit {}", refId);
+			LOGGER.info("Git repository is at commit {}", refName);
 			
 		} catch (GitAPIException ge) {
 			LOGGER.error("Failed to checkout branch", ge);
