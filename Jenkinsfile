@@ -4,10 +4,6 @@ pipeline {
 		maven 'Maven-3.3.1'
 		jdk 'JDK1.8.0'
 	}
-    
-	environment {
-		CDA_SPARK_ROOM = "15531750-1395-11e5-b45d-dd155cb7d786"
-	}
 	
     stages {
 		
