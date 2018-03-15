@@ -37,8 +37,8 @@ pipeline {
 						sonarScan('Sonar')
 		        	}
 		        }
-		        
-		        // Upload the artifacts to artifactory
+		  
+		        // Upload the artifacts to Artifactory
 				stage ('Deploy Artifacts') {
 					steps {
 				        mavenArtifactoryDeploy() {
